@@ -48,10 +48,10 @@ class GameLife:
         Получим поле, разбитое на self.w * self.h клеток
         """
         for x in range(0, self.width, self.cell_size):
-            pygame.draw.line(self.screen, pygame.Color('white'), (x, 0), (x, self.height))
+            pygame.draw.line(self.screen, pygame.Color('black'), (x, 0), (x, self.height))
         
         for y in range(0, self.height, self.cell_size):
-            pygame.draw.line(self.screen, pygame.Color('white'), (0, y), (self.width, y))
+            pygame.draw.line(self.screen, pygame.Color('black'), (0, y), (self.width, y))
 
     def create_grid(self, randomize: bool = True) -> np.ndarray:
         """
@@ -80,3 +80,13 @@ class GameLife:
             grid = np.random.choice((0,1), size=(self.h, self.w), replace=True, p=(zeros_proba, first_proba))
             return grid
 
+    def draw_grid(self, grid) -> None:
+        """
+        Раскраска клеток, в которых есть жизнь
+        """
+        for y in range(0, self.w):
+            for x in range(0, self.h):
+                if grid[y][x] == 1:
+                    pygame.draw.rect(self.screen, color = pygame.Color('red'), rect = (self.cell_size * x, self.cell_size * y, self.cell_size, self.cell_size))
+                else:
+                    pygame.draw.rect(self.screen, color = pygame.Color('white'), rect = (self.cell_size * x, self.cell_size * y, self.cell_size, self.cell_size))
