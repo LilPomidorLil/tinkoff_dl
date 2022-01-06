@@ -1,6 +1,8 @@
+from typing import ClassVar
 import pygame ## библиотека для окна с графикой
 import numpy as np ## для работы с матрицами
-from pygame.locals import QUIT ## при нажатии на выход работа программы остановиться
+from pygame.locals import QUIT
+from pygame.time import Clock ## при нажатии на выход работа программы остановиться
 
 
 ## создадим класс, в котором будет вся логика и интерфейс
@@ -40,11 +42,14 @@ class GameLife:
         self.speed = speed
 
     def displaying_lines(self) -> None:
-        for x in range(0, self.width, self.cell_size):
-            pygame.draw.line(self.screen, pygame.color('white'), (x, 0), (x, self.height))
+        """
+        Рисуем сетку
 
+        Получим поле, разбитое на self.w * self.h клеток
+        """
+        for x in range(0, self.width, self.cell_size):
+            pygame.draw.line(self.screen, pygame.Color('white'), (x, 0), (x, self.height))
+        
         for y in range(0, self.height, self.cell_size):
-            pygame.draw.line(self.screen, pygame.Color('white'), (0, y), (self.width, y)
-    
-    
+            pygame.draw.line(self.screen, pygame.Color('white'), (0, y), (self.width, y))
 
