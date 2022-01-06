@@ -53,3 +53,30 @@ class GameLife:
         for y in range(0, self.height, self.cell_size):
             pygame.draw.line(self.screen, pygame.Color('white'), (0, y), (self.width, y))
 
+    def create_grid(self, randomize: bool = True) -> np.ndarray:
+        """
+        Создаем матрицу, в которой будет заложено первоначальное состояние системы (0 и 1).
+
+        Parametrs:
+        -------------
+        randomize: bool - по умолч. True - состояние генерируется случайно. False - ввод вероятностей появления 1 и 0
+        ## Сумма вероятностей 0 и 1 строго равна единице
+
+        Return:
+        -------------
+        grid: np.ndarray - матрица первоначального состояния
+        """
+
+        if randomize == True:
+            grid = np.random.randint(0, 2, (self.h, self.w))
+            return grid
+        else:
+            first_proba = input('Введите вероятность появления 1 ')
+            zeros_proba = input('Введите вероятность появления 0 ')
+            while float(first_proba) + float(zeros_proba) != 1:
+                print('Сумма вероятностей должна быть равна 1')
+                first_proba = input('Введите вероятность появления 1 ')
+                zeros_proba = input('Введите вероятность появления 0 ')
+            grid = np.random.choice((0,1), size=(self.h, self.w), replace=True, p=(zeros_proba, first_proba))
+            return grid
+
