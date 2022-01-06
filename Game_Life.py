@@ -167,17 +167,64 @@ class GameLife:
             clock.tick(self.speed)
         pygame.quit()
 
-game = GameLife()
 
-answer = input('Выберите тип формирования матрицы: \nСлучайно - True\nСам задам вероятности - False\n')
-while (answer != 'True') and (answer != 'False'):
-    print('Упс! Проверьте правильность ввода')
-    time.sleep(1)
-    answer = input('Выберите тип формирования матрицы: \nСлучайно - True\nСам задам вероятности - False\n')
+width = 400
+height = 400
+cell_size = 10
+speed = 10
 
-if answer == 'True':
-    grid = game.create_grid()
-else:
-    grid = game.create_grid(randomize=answer)
+def params_setting() -> None:
+    """
+    Функция для изменения параметров игры
+    """
+    global width, height, cell_size, speed
+    param = input('Хотите изменить параметры игры? \nДа - True \nНет - False\n')
+    while (param != 'True') and (param != 'False'):
+        print('Упс! Проверьте правильность ввода')
+        time.sleep(1)
+        param = input('Хотите изменить параметры игры? \nДа - True \nFalse\n')
 
-game.run(grid)
+    while param == 'True':
+        settings = input('\n\nВыберите что хотите изменить: \nШирина окна - 1\nВысота окна - 2\nРазмер клетки - 3\nСкорость игры - 4\nВернуться назад - break\n')
+        if settings == '1':
+            width = input('Введите ширину окна\n')
+        elif settings == '2':
+            height = input('Введите высоту окна\n')
+        elif settings == '3':
+            cell_size = input('Введите размер клетки\n')
+        elif settings == '4':
+            speed = input('Введите скорость игры\n')
+        if settings == 'break':
+            break
+    
+def grid_init() -> None:
+    """
+    Функция для инициализации матрицы первоначального состояния
+    """
+    global answer
+    answer = input('\n\n\nВыберите тип формирования матрицы: \nСлучайно - True\nСам задам вероятности - False\n')
+    while (answer != 'True') and (answer != 'False'):
+        print('Упс! Проверьте правильность ввода')
+        time.sleep(1)
+        answer = input('Выберите тип формирования матрицы: \nСлучайно - True\nСам задам вероятности - False\n')
+
+def start_game() -> None:
+    """
+    Запускаем игру
+
+    """
+    global answer, game
+    game = GameLife(width, height, cell_size, speed)
+
+    if answer == 'True':
+        grid = game.create_grid()
+    else:
+        grid = game.create_grid(randomize=answer)
+    game.run(grid)
+
+params_setting()
+grid_init()
+start_game()
+
+print('\n\nNice to meet u. bye')
+time.sleep(5)
