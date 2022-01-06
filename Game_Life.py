@@ -137,5 +137,33 @@ class GameLife:
         """
         for x in range(1, self.width // self.cell_size - 1):
             for y in range(1, self.height // self.cell_size - 1):
-                self.next_generation[x][y] = self.get_neighbours(cell = (x, y), grid = grid)
-        return self.next_generation
+                self.next_generation_grid[x][y] = self.next_gen_info(cell = (x, y), grid = grid)
+        return self.next_generation_grid
+
+    def run(self, grid: np.ndarray) -> None:
+        """
+        Запуск игры
+
+        Parametrs:
+        ----------
+        grid: np.ndarray - матрица первоначального состояния
+
+        Return:
+        ----------
+        Игровое поле с симуляцией жизни
+        """
+        pygame.init()
+        clock = pygame.time.Clock()
+        pygame.display.set_caption('Life')
+        self.screen.fill(pygame.Color('black'))
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    running = False
+            self.draw_grid(grid)
+            self.displaying_lines()
+            grid = self.get_next_generation(grid = grid)
+            pygame.display.flip()
+            clock.tick(self.speed)
+        pygame.quit()
