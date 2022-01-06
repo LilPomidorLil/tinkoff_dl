@@ -2,6 +2,7 @@ import pygame ## библиотека для окна с графикой
 import numpy as np ## для работы с матрицами
 from pygame.locals import QUIT ## при нажатии на выход работа программы остановиться
 import time
+from copy import deepcopy
 
 ## создадим класс, в котором будет вся логика и интерфейс
 class GameLife:
@@ -35,7 +36,7 @@ class GameLife:
 
         ## создадим массив следующего состояния, заполненный нулями.
         # дальше в программе он будет меняться согласно условиям игры
-        self.next_generation_grid = np.zeros(shape=(self.w, self.h))
+        self.next_generation_grid = np.zeros(shape=(self.h, self.w))
 
         self.speed = speed
 
@@ -78,13 +79,14 @@ class GameLife:
                 zeros_proba = input('Введите вероятность появления 0 ')
             grid = np.random.choice((0,1), size=(self.h, self.w), replace=True, p=(zeros_proba, first_proba))
             return grid
+        
 
     def draw_grid(self, grid) -> None:
         """
         Раскраска клеток, в которых есть жизнь
         """
-        for y in range(0, self.w):
-            for x in range(0, self.h):
+        for y in range(0, self.h):
+            for x in range(0, self.w):
                 if grid[y][x] == 1:
                     pygame.draw.rect(self.screen, color = pygame.Color('red'), rect = (self.cell_size * x, self.cell_size * y, self.cell_size, self.cell_size))
                 else:
@@ -105,12 +107,12 @@ class GameLife:
         """
         self.cell = cell
         count = 0
-        for i in range(self.cell[1] - 1, self.cell[1] + 2):
-            for j in range(self.cell[0] - 1, self.cell[0] + 2):
-                if grid[i][j] == 1:
-                    count += 1
 
-        if grid[self.cell[0]][self.cell[1]] == 1:
+        for y in range(self.cell[1] - 1, self.cell[1] + 2):
+            for x in range(self.cell[0] - 1, self.cell[0] + 2):
+                if grid[y][x] == 1:
+                    count += 1
+        if grid[self.cell[1]][self.cell[0]] == 1:
             count -= 1
             if count == 2 or count == 3:
                 return 1
@@ -134,9 +136,9 @@ class GameLife:
         ----------
         self.next_generation - матрица следующего состояния
         """
-        for x in range(1, self.width // self.cell_size - 1):
-            for y in range(1, self.height // self.cell_size - 1):
-                self.next_generation_grid[x][y] = self.next_gen_info(cell = (x, y), grid = grid)
+        for y in range(1, self.h - 1):
+            for x in range(1, self.w - 1):
+                self.next_generation_grid[y][x] = self.next_gen_info(cell = (x, y), grid = grid)
         return self.next_generation_grid
 
     def run(self, grid: np.ndarray) -> None:
@@ -162,7 +164,7 @@ class GameLife:
                     running = False
             self.draw_grid(grid)
             self.displaying_lines()
-            grid = self.get_next_generation(grid = grid)
+            grid = deepcopy(self.get_next_generation(grid = grid))
             pygame.display.flip()
             clock.tick(self.speed)
         pygame.quit()
@@ -187,13 +189,13 @@ def params_setting() -> None:
     while param == 'True':
         settings = input('\n\nВыберите что хотите изменить: \nШирина окна - 1\nВысота окна - 2\nРазмер клетки - 3\nСкорость игры - 4\nВернуться назад - break\n')
         if settings == '1':
-            width = input('Введите ширину окна\n')
+            width = int(input('Введите ширину окна\n'))
         elif settings == '2':
-            height = input('Введите высоту окна\n')
+            height = int(input('Введите высоту окна\n'))
         elif settings == '3':
-            cell_size = input('Введите размер клетки\n')
+            cell_size = int(input('Введите размер клетки\n'))
         elif settings == '4':
-            speed = input('Введите скорость игры\n')
+            speed = int(input('Введите скорость игры\n'))
         if settings == 'break':
             break
     
@@ -213,7 +215,7 @@ def start_game() -> None:
     Запускаем игру
 
     """
-    global answer, game
+    global answer, game, width, height, cell_size, speed
     game = GameLife(width, height, cell_size, speed)
 
     if answer == 'True':
