@@ -121,3 +121,21 @@ class GameLife:
                 return 1
             return 0
 
+    def get_next_generation(self, grid: np.ndarray) -> np.ndarray:
+        """
+        Используя метод next_gen_info, мы получим информацию следующего состояния о каждой клетке. 
+
+        В этом методе мы запускаем next_gen_info для всех клеток и формируем матрицу следующего состояния
+
+        Parametrs:
+        ----------
+        grid: np.ndarray - матрица текущего состояния
+
+        Returns
+        ----------
+        self.next_generation - матрица следующего состояния
+        """
+        for x in range(1, self.width // self.cell_size - 1):
+            for y in range(1, self.height // self.cell_size - 1):
+                self.next_generation[x][y] = self.get_neighbours(cell = (x, y), grid = grid)
+        return self.next_generation
