@@ -1,9 +1,7 @@
-from typing import ClassVar
 import pygame ## библиотека для окна с графикой
 import numpy as np ## для работы с матрицами
-from pygame.locals import QUIT
-from pygame.time import Clock ## при нажатии на выход работа программы остановиться
-
+from pygame.locals import QUIT ## при нажатии на выход работа программы остановиться
+import time
 
 ## создадим класс, в котором будет вся логика и интерфейс
 class GameLife:
@@ -71,6 +69,7 @@ class GameLife:
             grid = np.random.randint(0, 2, (self.h, self.w))
             return grid
         else:
+            print('используйте разделитель - точку')
             first_proba = input('Введите вероятность появления 1 ')
             zeros_proba = input('Введите вероятность появления 0 ')
             while float(first_proba) + float(zeros_proba) != 1:
@@ -167,3 +166,18 @@ class GameLife:
             pygame.display.flip()
             clock.tick(self.speed)
         pygame.quit()
+
+game = GameLife()
+
+answer = input('Выберите тип формирования матрицы: \nСлучайно - True\nСам задам вероятности - False\n')
+while (answer != 'True') and (answer != 'False'):
+    print('Упс! Проверьте правильность ввода')
+    time.sleep(1)
+    answer = input('Выберите тип формирования матрицы: \nСлучайно - True\nСам задам вероятности - False\n')
+
+if answer == 'True':
+    grid = game.create_grid()
+else:
+    grid = game.create_grid(randomize=answer)
+
+game.run(grid)
