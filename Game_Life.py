@@ -90,3 +90,34 @@ class GameLife:
                     pygame.draw.rect(self.screen, color = pygame.Color('red'), rect = (self.cell_size * x, self.cell_size * y, self.cell_size, self.cell_size))
                 else:
                     pygame.draw.rect(self.screen, color = pygame.Color('white'), rect = (self.cell_size * x, self.cell_size * y, self.cell_size, self.cell_size))
+
+    def next_gen_info(self, cell: tuple, grid: np.ndarray) -> np.array:
+        """
+        Возвращает информацию о том, что случится с клеткой в следующем поколении согласно правилам игры
+
+        Parameters
+        ----------
+        cell : tuple - кортеж коррдинат клеток, для которой необходимо получить состояние следующего поколения
+
+        Returns
+        ----------
+        1 - останется жива или зародится новая жизнь
+        0 - умрет или клетка остается пустой
+        """
+        self.cell = cell
+        count = 0
+        for i in range(self.cell[1] - 1, self.cell[1] + 2):
+            for j in range(self.cell[0] - 1, self.cell[0] + 2):
+                if grid[i][j] == 1:
+                    count += 1
+
+        if grid[self.cell[0]][self.cell[1]] == 1:
+            count -= 1
+            if count == 2 or count == 3:
+                return 1
+            return 0
+        else:
+            if count == 3:
+                return 1
+            return 0
+
